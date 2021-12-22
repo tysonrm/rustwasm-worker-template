@@ -14,9 +14,18 @@ fn log_request(req: &Request) {
   );
 }
 
+fn js_hello(ctx: &mut Context) {
+  println!("\n<----run_simple_js---->");
+  let code = r#"print('hello quickjs')"#;
+  let r = ctx.eval_global_str(code);
+  println!("return value:{:?}", r);
+}
+
 #[event(fetch)]
 pub async fn main(req: Request, env: Env) -> Result<Response> {
   log_request(&req);
+  let mut ctx = Context::new();
+  js_hello(&mut ctx);
 
   // Optionally, get more helpful error messages written to the console in the case of a panic.
   utils::set_panic_hook();
